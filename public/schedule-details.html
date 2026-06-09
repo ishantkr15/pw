@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -43,6 +43,7 @@ body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:
 .empty-icon{font-size:48px;margin-bottom:14px;opacity:0.5}
 .empty-text{font-size:15px;font-weight:700;color:#94a3b8}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
 <div class="back-section">
@@ -108,12 +109,18 @@ function switchTab(tab,btn){
 
 async function loadScheduleDetails(){
     try{
-        const data=await pw(`/pw-api/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents/${SCHEDULE_ID}`);
-        if(!data.success||!data.data){
-            showEmpty('video','Failed to load content');
+        const stored = localStorage.getItem('asm_current_item');
+        if(!stored){
+            showEmpty('video','Failed to load content. Please go back and try again.');
             return;
         }
-        const item=data.data;
+        const item = JSON.parse(stored);
+        
+        // Ensure we loaded the correct item
+        if(item._id !== SCHEDULE_ID) {
+            showEmpty('video','Item mismatch. Please go back to the list and click again.');
+            return;
+        }
         const topic=item.topic||'';
         document.getElementById('back-label').textContent=topic||'Back';
         document.title=(topic||'Content')+' â€” As Multiverse';
@@ -129,15 +136,29 @@ async function loadScheduleDetails(){
             const wrap=document.getElementById('video-wrap');
             const ph=document.getElementById('video-placeholder');
             if(videoUrl.includes('.m3u8')){
-                // HLS stream - use iframe with a simple player
-                wrap.innerHTML=`<iframe src="https://hlsplayer.net/embed?type=m3u8&src=${encodeURIComponent(videoUrl)}" allowfullscreen></iframe>`;
+                // HLS stream - use hls.js directly
+                wrap.innerHTML=`<video id="hls-video" controls autoplay style="width:100%;height:100%;background:#000;" poster="${esc(thumb)}"></video>`;
+                const video = document.getElementById('hls-video');
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(videoUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        video.play().catch(e=>console.log("Auto-play prevented",e));
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = videoUrl;
+                    video.addEventListener('loadedmetadata', function() {
+                        video.play().catch(e=>console.log("Auto-play prevented",e));
+                    });
+                }
             } else if(videoUrl.includes('youtube')||videoUrl.includes('youtu.be')){
                 const vid=videoUrl.match(/(?:v=|\/embed\/|youtu\.be\/)([^&?\s]+)/);
                 if(vid) wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid[1]}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
             } else if(videoUrl.includes('mpd')){
                 ph.innerHTML=`<div class="icon">ðŸŽ¬</div><div class="text">DRM protected stream. Open in PW app for best experience.</div>`;
             } else {
-                wrap.innerHTML=`<video controls autoplay poster="${esc(thumb)}" src="${esc(videoUrl)}"></video>`;
+                wrap.innerHTML=`<video controls autoplay poster="${esc(thumb)}" src="${esc(videoUrl)}" style="width:100%;height:100%;background:#000;"></video>`;
             }
         } else {
             document.getElementById('video-placeholder').innerHTML=`<div class="icon">ðŸ“¹</div><div class="text">Video not available or requires PW app.</div>`;
@@ -179,7 +200,8 @@ async function loadScheduleDetails(){
             if(TAP==='note'){
                 switchTab('notes',document.querySelector('[data-tab="notes"]'));
                 if(notes[NOTE_INDEX]?.url){
-                    window.open(notes[NOTE_INDEX].url,'_blank');
+                    // Redirect directly to the PDF to avoid popup blockers
+                    window.location.replace(notes[NOTE_INDEX].url);
                 }
             }
         }
