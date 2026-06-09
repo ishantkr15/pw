@@ -1,0 +1,25 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/home.html" },
+    { "source": "/batches", "destination": "/home.html" },
+    { "source": "/subjects", "destination": "/subjects.html" },
+    { "source": "/content", "destination": "/content.html" },
+    { "source": "/stream", "destination": "/stream.html" },
+    { "source": "/schedule-details", "destination": "/schedule-details.html" },
+    { "source": "/get-access", "destination": "/get-access.html" },
+    { "source": "/khazana", "destination": "/khazana.html" },
+    { "source": "/get-batch-test", "destination": "/get-batch-test.html" },
+    { "source": "/get-dpp-quiz", "destination": "/get-dpp-quiz.html" },
+    { "source": "/reset-key", "destination": "/get-access.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Loading — As Multiverse</title>
+<link rel="icon" type="image/png" href="/static/site_logo.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
+body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:#e2e8f0}
+.back-section{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(15,23,42,0.97);display:flex;align-items:center;z-index:1300;border-bottom:1px solid rgba(30,41,59,0.5);padding:0 8px}
+.back-section::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.5),transparent)}
+.back-link{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#fff;border:none;background:transparent;cursor:pointer;padding:8px 10px;border-radius:8px;transition:transform 0.1s;text-decoration:none}
+.back-link:active{transform:scale(0.95)}
+.nav-icon{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:22px;height:22px}
+.nav-icon svg{width:22px;height:22px;stroke:#6366f1;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
+.back-label{font-size:clamp(14px,3.8vw,16px);font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 80px)}
+.container{max-width:900px;margin:50px auto 0;padding:16px 12px 40px}
+.video-wrap{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:14px;overflow:hidden;margin-bottom:20px;border:2px solid rgba(99,102,241,0.2)}
+.video-wrap video,.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.video-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0f172a}
+.video-placeholder .icon{font-size:48px;opacity:0.5}
+.video-placeholder .text{font-size:14px;color:#94a3b8;text-align:center;padding:0 20px}
+.info-card{background:#1e293b;border-radius:14px;border:2px solid rgba(99,102,241,0.2);padding:20px;margin-bottom:16px}
+.info-title{font-size:clamp(16px,4.5vw,20px);font-weight:800;color:#fff;margin-bottom:12px;line-height:1.4}
+.info-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:#94a3b8}
+.info-meta span{display:flex;align-items:center;gap:4px}
+.pdf-viewer{width:100%;min-height:70vh;border:none;border-radius:14px;background:#1e293b}
+.notes-list{display:flex;flex-direction:column;gap:12px}
+.note-card{background:#1e293b;border-radius:14px;border:2px solid rgba(99,102,241,0.2);overflow:hidden;cursor:pointer;transition:transform 0.1s}
+.note-card:active{transform:scale(0.97)}
+.note-link{display:flex;align-items:center;text-decoration:none;color:#e2e8f0;padding:16px;gap:14px}
+.note-icon{font-size:32px;flex-shrink:0}
+.note-name{font-size:clamp(13px,3.5vw,16px);font-weight:700;color:#fff}
+.note-size{font-size:12px;color:#94a3b8;margin-top:4px}
+.skel{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:14px}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.tab-bar{display:flex;background:#1e293b;border-radius:12px;border:1px solid rgba(99,102,241,0.2);margin-bottom:16px;overflow:hidden}
+.tab-item{flex:1;padding:12px 8px;text-align:center;font-size:clamp(12px,3vw,14px);font-weight:700;color:#64748b;background:transparent;border:none;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s}
+.tab-item.active{color:#fff;border-bottom-color:#6366f1;background:rgba(99,102,241,0.1)}
+.panel{display:none}.panel.active{display:block}
+.empty{text-align:center;padding:60px 20px;color:#64748b}
+.empty-icon{font-size:48px;margin-bottom:14px;opacity:0.5}
+.empty-text{font-size:15px;font-weight:700;color:#94a3b8}
+</style>
+</head>
+<body>
+<div class="back-section">
+    <button class="back-link" onclick="history.back()">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="back-label" id="back-label">Back</span>
+    </button>
+</div>
+<div class="container">
+    <div class="tab-bar" id="tab-bar" style="display:none">
+        <button class="tab-item active" data-tab="video" onclick="switchTab('video',this)">📹 Video</button>
+        <button class="tab-item" data-tab="notes" onclick="switchTab('notes',this)">📄 Notes</button>
+    </div>
+    <div id="panel-video" class="panel active">
+        <div class="video-wrap" id="video-wrap">
+            <div class="video-placeholder" id="video-placeholder">
+                <div class="skel" style="width:100%;height:100%;border-radius:0"></div>
+            </div>
+        </div>
+        <div class="info-card" id="video-info" style="display:none">
+            <div class="info-title" id="video-title"></div>
+            <div class="info-meta" id="video-meta"></div>
+        </div>
+    </div>
+    <div id="panel-notes" class="panel">
+        <div class="notes-list" id="notes-list"></div>
+    </div>
+</div>
+<script>
+(function(){var e=localStorage.getItem('asm_access_expiry');if(!e||Date.now()>parseInt(e)){localStorage.removeItem('asm_access_expiry');window.location.href='/get-access';return;}})();
+
+const QS=new URLSearchParams(location.search);
+const BATCH_ID=QS.get('batchId')||'';
+const SUBJECT_ID=QS.get('subjectId')||'';
+const SCHEDULE_ID=QS.get('scheduleId')||'';
+const TAP=QS.get('tap')||'video';
+const NOTE_INDEX=parseInt(QS.get('noteIndex')||'0');
+const IS_DPP=QS.get('isDpp')==='true';
+
+if(!BATCH_ID||!SCHEDULE_ID) window.location.href='/';
+
+const PW_HDR={"Accept-Encoding":"gzip","User-Agent":"Dalvik/2.1.0 (Linux; U; Android 11; SM-A707F Build/RP1A.200720.012)","authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE2Mzc3MDIuNDIyLCJkYXRhIjp7Il9pZCI6IjY3YzQyNDQxYTM2NWIxZjNmMzc3NjIxMCIsInVzZXJuYW1lIjoiOTA1NDAxMzQ5MiIsImZpcnN0TmFtZSI6Ik1rIE1vbWluIiwibGFzdE5hbWUiOiIiLCJvcmdhbml6YXRpb24iOnsiX2lkIjoiNWViMzkzZWU5NWZhYjc0NjhhNzlkMTg5Iiwid2Vic2l0ZSI6InBoeXNpY3N3YWxsYWguY29tIiwibmFtZSI6IlBoeXNpY3N3YWxsYWgifSwiZW1haWwiOiJNS01LQEdNQUlMLkNPTSIsInJvbGVzIjpbIjViMjdiZDk2NTg0MmY5NTBhNzc4YzZlZiJdLCJjb3VudHJ5R3JvdXAiOiJJTiIsInR5cGUiOiJVU0VSIn0sImp0aSI6IkVOQjAtWnplUWxPX2lDYnJnOE1IYWdfNjdjNDI0NDFhMzY1YjFmM2YzNzc2MjEwIiwiaWF0IjoxNzgxMDMyOTAyfQ.RVSrUHl5_rff9zyA22gvWf3uurlmS8WmwFPx25idhII","client-id":"ADMIN","client-type":"MOBILE","client-version":"538","content-type":"application/json","device-meta":"{\"APP_VERSION\":\"538\",\"APP_VERSION_NAME\":\"15.32.0\",\"DEVICE_MAKE\":\"Samsung\",\"DEVICE_MODEL\":\"SM-A707F\",\"OS_VERSION\":\"11\",\"PACKAGE_NAME\":\"xyz.penpencil.physicswala\",\"network\":\"wifi_data\",\"carrier\":\"UNDEFINED\"}","randomid":"3d3b49f068728fa3","referer":"https://android.pw.live"};
+async function pw(url){return fetch(url,{headers:PW_HDR}).then(r=>r.json());}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function fmtDuration(sec){
+    if(!sec)return'';
+    const m=Math.floor(sec/60),s=sec%60;
+    return m+'m '+s+'s';
+}
+function fmtDate(iso){
+    if(!iso)return'';
+    try{const d=new Date(iso),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return d.getUTCDate()+' '+M[d.getUTCMonth()]+', '+d.getUTCFullYear();}catch{return'';}
+}
+
+function switchTab(tab,btn){
+    document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+tab).classList.add('active');
+}
+
+async function loadScheduleDetails(){
+    try{
+        const data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents/${SCHEDULE_ID}`);
+        if(!data.success||!data.data){
+            showEmpty('video','Failed to load content');
+            return;
+        }
+        const item=data.data;
+        const topic=item.topic||'';
+        document.getElementById('back-label').textContent=topic||'Back';
+        document.title=(topic||'Content')+' — As Multiverse';
+
+        // Handle video
+        const vd=item.videoDetails||{};
+        const videoUrl=vd.videoUrl||vd.hlsVideoUrl||'';
+        const thumb=vd.image||'/static/site_thumbnail.png';
+        const duration=vd.duration||'';
+        const date=fmtDate(item.date||item.startTime||'');
+
+        if(videoUrl){
+            const wrap=document.getElementById('video-wrap');
+            const ph=document.getElementById('video-placeholder');
+            if(videoUrl.includes('.m3u8')){
+                // HLS stream - use iframe with a simple player
+                wrap.innerHTML=`<iframe src="https://hlsplayer.net/embed?type=m3u8&src=${encodeURIComponent(videoUrl)}" allowfullscreen></iframe>`;
+            } else if(videoUrl.includes('youtube')||videoUrl.includes('youtu.be')){
+                const vid=videoUrl.match(/(?:v=|\/embed\/|youtu\.be\/)([^&?\s]+)/);
+                if(vid) wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid[1]}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
+            } else if(videoUrl.includes('mpd')){
+                ph.innerHTML=`<div class="icon">🎬</div><div class="text">DRM protected stream. Open in PW app for best experience.</div>`;
+            } else {
+                wrap.innerHTML=`<video controls autoplay poster="${esc(thumb)}" src="${esc(videoUrl)}"></video>`;
+            }
+        } else {
+            document.getElementById('video-placeholder').innerHTML=`<div class="icon">📹</div><div class="text">Video not available or requires PW app.</div>`;
+        }
+
+        // Show video info
+        const infoEl=document.getElementById('video-info');
+        infoEl.style.display='block';
+        document.getElementById('video-title').textContent=topic;
+        const meta=[];
+        if(duration) meta.push(`<span>⏱ ${esc(duration)}</span>`);
+        if(date) meta.push(`<span>📅 ${esc(date)}</span>`);
+        if(item.subjectId?.name) meta.push(`<span>📚 ${esc(item.subjectId.name)}</span>`);
+        document.getElementById('video-meta').innerHTML=meta.join('');
+
+        // Handle notes/attachments
+        const notes=[];
+        (item.homeworkIds||[]).forEach(hw=>{
+            (hw.attachmentIds||[]).forEach(att=>{
+                const url=att.baseUrl?att.baseUrl+att.key:'';
+                notes.push({name:hw.topic||att.name||'Note',url:url,size:att.size||0});
+            });
+        });
+
+        if(notes.length){
+            document.getElementById('tab-bar').style.display='flex';
+            const notesList=document.getElementById('notes-list');
+            notes.forEach((n,i)=>{
+                const card=document.createElement('div');
+                card.className='note-card';
+                card.innerHTML=`<a class="note-link" href="${esc(n.url)}" target="_blank" rel="noopener">
+                    <span class="note-icon">📄</span>
+                    <div><div class="note-name">${esc(n.name)}</div>${n.size?`<div class="note-size">${(n.size/1024).toFixed(0)} KB</div>`:''}</div>
+                </a>`;
+                notesList.appendChild(card);
+            });
+
+            // If tapped on notes, switch to notes tab
+            if(TAP==='note'){
+                switchTab('notes',document.querySelector('[data-tab="notes"]'));
+                if(notes[NOTE_INDEX]?.url){
+                    window.open(notes[NOTE_INDEX].url,'_blank');
+                }
+            }
+        }
+    }catch(err){
+        console.error(err);
+        showEmpty('video','Failed to load. Please try again.');
+    }
+}
+
+function showEmpty(panel,msg){
+    document.getElementById('panel-'+panel).innerHTML=`<div class="empty"><div class="empty-icon">😔</div><div class="empty-text">${msg}</div></div>`;
+}
+
+loadScheduleDetails();
+</script>
+</body>
+</html>
