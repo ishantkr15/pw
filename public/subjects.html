@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Arjuna JEE 2027 — As Multiverse</title>
+<title>Arjuna JEE 2027 â€” As Multiverse</title>
 <link rel="icon" type="image/png" href="/static/site_logo.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -215,7 +215,7 @@ async function pw(url){return fetch(url,{headers:PW_HDR}).then(r=>r.json());}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function ep(v){return encodeURIComponent(v||'')}
 function fmtIST(iso){if(!iso)return'';try{const d=new Date(new Date(iso).getTime()+(5*60+30)*60000);let h=d.getUTCHours(),m=d.getUTCMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return`${h}:${String(m).padStart(2,'0')}${ap}`;}catch{return'';}}
-function fmtHeld(iso){if(!iso)return'';try{const d=new Date(new Date(iso).getTime()+(5*60+30)*60000),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let h=d.getUTCHours(),m=d.getUTCMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return`${d.getUTCDate()} ${M[d.getUTCMonth()]} ${d.getUTCFullYear()} • ${h}:${String(m).padStart(2,'0')} ${ap}`;}catch{return'';}}
+function fmtHeld(iso){if(!iso)return'';try{const d=new Date(new Date(iso).getTime()+(5*60+30)*60000),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let h=d.getUTCHours(),m=d.getUTCMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return`${d.getUTCDate()} ${M[d.getUTCMonth()]} ${d.getUTCFullYear()} â€¢ ${h}:${String(m).padStart(2,'0')} ${ap}`;}catch{return'';}}
 function relTime(ts){const s=Math.floor((Date.now()-new Date(ts))/1000);if(s>=31536000)return Math.floor(s/31536000)+'y ago';if(s>=86400)return Math.floor(s/86400)+'d ago';if(s>=3600)return Math.floor(s/3600)+'h ago';if(s>=60)return Math.floor(s/60)+'m ago';return'just now';}
 function linkify(t){return t.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig,'<a href="$1" target="_blank">$1</a>');}
 function showMsg(t){const p=document.getElementById('popup');p.textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3000);}
@@ -226,7 +226,7 @@ async function fetchTeacherMap(ids){
 if(!ids||!ids.length)return{};
 try{
 const unique=[...new Set(ids)].join(',');
-const data=await pw(`https://api.penpencil.co/v1/users/get-user-details-list?userIds=${unique}`);
+const data=await pw(`/pw-api/v1/users/get-user-details-list?userIds=${unique}`);
 const map={};
 (data.data||[]).forEach(u=>{map[u._id]={name:u.name||`${u.firstName||''} ${u.lastName||''}`.trim(),img:u.imageId?(u.imageId.baseUrl+u.imageId.key):''};});
 return map;
@@ -272,7 +272,7 @@ async function loadSchedule(){
 const row=document.getElementById('sched-row');
 try{
 
-const data=await pw(`https://api.penpencil.co/v1/batches/${BATCH_ID}/todays-schedule`);
+const data=await pw(`/pw-api/v1/batches/${BATCH_ID}/todays-schedule`);
 row.innerHTML='';
 if(!data.success||!data.data?.length){
 row.innerHTML='<p style="font-style:italic;color:#94a3b8;padding:12px 0;font-size:13px">No classes scheduled for today.</p>';
@@ -362,7 +362,7 @@ if(subjectsLoaded)return;subjectsLoaded=true;
 showSubjSkels();
 const list=document.getElementById('subj-list');
 try{
-const data=await pw(`https://api.penpencil.co/v3/batches/${BATCH_ID}/details`);
+const data=await pw(`/pw-api/v3/batches/${BATCH_ID}/details`);
 list.innerHTML='';
 if(!data.success){list.innerHTML='<li style="text-align:center;padding:40px;color:#64748b">Failed to load subjects</li>';return;}
 const subs=data.data?.subjects||[];
@@ -384,12 +384,12 @@ if(khazanaRendered)return;khazanaRendered=true;
 const list=document.getElementById('khazana-list');
 list.innerHTML='<div class="skel" style="height:clamp(76px,20vw,110px);border-radius:14px"></div>';
 if(!khazanaId){
-list.innerHTML=`<li><div style="text-align:center;padding:60px 20px;color:#64748b"><div style="font-size:48px;margin-bottom:14px;opacity:0.5">🏆</div><div style="font-size:16px;font-weight:700;color:#94a3b8;margin-bottom:8px">No Khazana Available</div><div style="font-size:13px">Not available for <strong style="color:#94a3b8">${esc(BATCH_NAME)}</strong></div></div></li>`;
+list.innerHTML=`<li><div style="text-align:center;padding:60px 20px;color:#64748b"><div style="font-size:48px;margin-bottom:14px;opacity:0.5">ðŸ†</div><div style="font-size:16px;font-weight:700;color:#94a3b8;margin-bottom:8px">No Khazana Available</div><div style="font-size:13px">Not available for <strong style="color:#94a3b8">${esc(BATCH_NAME)}</strong></div></div></li>`;
 return;
 }
 list.innerHTML='<div class="skel" style="height:clamp(76px,20vw,110px);border-radius:14px"></div>';
 try{
-const data=await pw(`https://api.penpencil.co/v2/programs/${khazanaId}/filters?page=1&limit=20`);
+const data=await pw(`/pw-api/v2/programs/${khazanaId}/filters?page=1&limit=20`);
 const khName=data.data?.name||'Khazana';
 list.innerHTML='';
 const li=document.createElement('li');li.className='subj-item';
@@ -415,7 +415,7 @@ if(testsLoaded||testsLoading)return;testsLoading=true;
 const root=document.getElementById('tests-root');
 {const n=Math.max(3,Math.floor((window.innerHeight-200)/130));root.innerHTML=Array(n).fill('<div class="skel" style="height:120px;border-radius:14px;margin-bottom:12px"></div>').join('');}
 try{
-const filters=await pw(`https://api.penpencil.co/v3/test-service/tests/filters?batchId=${BATCH_ID}`);
+const filters=await pw(`/pw-api/v3/test-service/tests/filters?batchId=${BATCH_ID}`);
 if(!filters.success){root.innerHTML=ndH('Failed to load tests');return;}
 const catSecs=(filters.data?.categorySections||[]).flatMap(c=>c.sections||[]);
 if(!catSecs.length){root.innerHTML=ndH('No Tests Available');return;}
@@ -433,12 +433,12 @@ async function loadSectionTests(secId,type){
 if(type==='objective'){
 if(loadedObjSections[secId]!==undefined)return;
 loadedObjSections[secId]=null;
-try{const r=await pw(`https://api.penpencil.co/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=false`);loadedObjSections[secId]=(r.data||[]).map(t=>mkT(t,false));}
+try{const r=await pw(`/pw-api/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=false`);loadedObjSections[secId]=(r.data||[]).map(t=>mkT(t,false));}
 catch{loadedObjSections[secId]=[];}
 }else{
 if(loadedSubSections[secId]!==undefined)return;
 loadedSubSections[secId]=null;
-try{const r=await pw(`https://api.penpencil.co/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=true`);loadedSubSections[secId]=(r.data||[]).map(t=>mkT(t,true));}
+try{const r=await pw(`/pw-api/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=true`);loadedSubSections[secId]=(r.data||[]).map(t=>mkT(t,true));}
 catch{loadedSubSections[secId]=[];}
 }
 }
@@ -500,17 +500,17 @@ tests.forEach(t=>{
 const now=Date.now(),sMs=t.startTimeIso?new Date(t.startTimeIso).getTime():null;
 const ns=sMs&&sMs>now,ra=!!t.isResultAwaiting;
 let badge='';
-if(ns)badge=`<span class="test-badge b-ns">⏳ Not Started</span>`;
-else if(ra)badge=`<span class="test-badge b-ra">📊 Result Awaiting</span>`;
-else if(sMs)badge=`<span class="test-badge b-av">✅ Available</span>`;
+if(ns)badge=`<span class="test-badge b-ns">â³ Not Started</span>`;
+else if(ra)badge=`<span class="test-badge b-ra">ðŸ“Š Result Awaiting</span>`;
+else if(sMs)badge=`<span class="test-badge b-av">âœ… Available</span>`;
 const card=document.createElement('div');card.className='test-card';
 card.dataset.siso=t.startTimeIso||'';card.dataset.ra=ra?'true':'false';card.dataset.held=t.heldOn||'';card.dataset.tid=t._id;card.dataset.tname=t.name||'';card.dataset.hasSyl=t.enableSyllabus?'true':'false';
 
-card.innerHTML=`<div class="test-card-body"><div class="test-card-name">${esc(t.name||'Untitled')}</div><div class="test-meta"><span class="test-chip">${ICO_Q}${t.totalQuestions} Qs</span><span class="test-chip">${ICO_S}${t.totalMarks} Marks</span><span class="test-chip">${ICO_C}${t.maxDuration} Mins</span></div>${badge?`<div class="test-status-row">${badge}</div>`:''}${t.heldOn?`<div class="test-date-row">${ICO_D}<span class="test-date-text">Starts: ${esc(t.heldOn)}</span></div>`:''}</div>${t.enableSyllabus?`<div class="test-syl-wrap"><button class="test-syl-btn" onclick="event.stopPropagation();openSyl(this)">📋 View Syllabus</button></div>`:''}`;
+card.innerHTML=`<div class="test-card-body"><div class="test-card-name">${esc(t.name||'Untitled')}</div><div class="test-meta"><span class="test-chip">${ICO_Q}${t.totalQuestions} Qs</span><span class="test-chip">${ICO_S}${t.totalMarks} Marks</span><span class="test-chip">${ICO_C}${t.maxDuration} Mins</span></div>${badge?`<div class="test-status-row">${badge}</div>`:''}${t.heldOn?`<div class="test-date-row">${ICO_D}<span class="test-date-text">Starts: ${esc(t.heldOn)}</span></div>`:''}</div>${t.enableSyllabus?`<div class="test-syl-wrap"><button class="test-syl-btn" onclick="event.stopPropagation();openSyl(this)">ðŸ“‹ View Syllabus</button></div>`:''}`;
 card.querySelector('.test-card-body').addEventListener('click',()=>{
 const si=card.dataset.siso,isRa=card.dataset.ra==='true',held=card.dataset.held;
-if(si){const ms=new Date(si).getTime();if(!isNaN(ms)&&ms>Date.now()){showInfo('⏳','Test Not Started Yet',`Scheduled:\n\n📅 ${held}\n\nCome back at scheduled time 💪`);return;}}
-if(isRa){showInfo('📊','Result Not Published','Result not published yet. Once out, you can start. 🔔');return;}
+if(si){const ms=new Date(si).getTime();if(!isNaN(ms)&&ms>Date.now()){showInfo('â³','Test Not Started Yet',`Scheduled:\n\nðŸ“… ${held}\n\nCome back at scheduled time ðŸ’ª`);return;}}
+if(isRa){showInfo('ðŸ“Š','Result Not Published','Result not published yet. Once out, you can start. ðŸ””');return;}
 location.href=`/get-batch-test?testId=${ep(card.dataset.tid)}&testName=${ep(card.dataset.tname)}&batchId=${ep(BATCH_ID)}`;
 });
 list.appendChild(card);
@@ -518,18 +518,18 @@ list.appendChild(card);
 ar.appendChild(list);
 }
 
-function ndH(t){return`<div class="no-data"><div class="no-data-icon">📝</div><div class="no-data-title">${t}</div></div>`;}
+function ndH(t){return`<div class="no-data"><div class="no-data-icon">ðŸ“</div><div class="no-data-title">${t}</div></div>`;}
 
 let sylLangs=[],sylLang='',sylData={};
 async function openSyl(btn){
 const card=btn.closest('.test-card');
 const tid=card.dataset.tid,tname=card.dataset.tname;
-document.getElementById('syl-title').textContent=(tname||'')+' — Syllabus';
+document.getElementById('syl-title').textContent=(tname||'')+' â€” Syllabus';
 document.getElementById('syl-langs').style.display='none';
 document.getElementById('syl-content').innerHTML='<div class="syl-loading">Loading syllabus...</div>';
 document.getElementById('syl-modal').classList.add('open');
 try{
-const data=await pw(`https://api.penpencil.co/v3/test-service/tests/${tid}/instructions`);
+const data=await pw(`/pw-api/v3/test-service/tests/${tid}/instructions`);
 const d=data.data||{};
 sylData=parseSyl(d.syllabus||{});
 sylLangs=(d.languageCodes||[]).map(l=>({code:l.code.toLowerCase(),label:l.code.toUpperCase()})).filter(l=>sylData[l.code]);
@@ -557,7 +557,7 @@ if(annLoading||annDone)return;annLoading=true;
 const list=document.getElementById('ann-list');
 if(page===1){const n=Math.max(3,Math.floor((window.innerHeight-200)/100));list.innerHTML=Array(n).fill('<div class="skel" style="height:90px;border-radius:12px;margin-bottom:12px"></div>').join('');}
 try{
-const data=await pw(`https://api.penpencil.co/v1/batches/${BATCH_ID}/announcement?page=${page}`);
+const data=await pw(`/pw-api/v1/batches/${BATCH_ID}/announcement?page=${page}`);
 if(page===1)list.innerHTML='';
 if(data.success&&data.data?.length){
 data.data.forEach(item=>{

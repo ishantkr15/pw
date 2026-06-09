@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Batches — As Multiverse</title>
+    <title>Batches â€” As Multiverse</title>
     <link rel="icon" type="image/png" href="/static/site_logo.png">
     <link rel="manifest" id="manifest-placeholder">
     <meta name="application-name" content="As Multiverse">
@@ -398,8 +398,8 @@ color: #f59e0b;
             flex: 1;
         }
 
-        .batch-language::before { content: "🗣️ "; }
-        .batch-byname::before   { content: "👨‍🎓 "; }
+        .batch-language::before { content: "ðŸ—£ï¸ "; }
+        .batch-byname::before   { content: "ðŸ‘¨â€ðŸŽ“ "; }
 
         .batch-language,
         .batch-byname {
@@ -414,7 +414,7 @@ color: #f59e0b;
             color: #94a3b8;
         }
 
-        .date-item::before { content: "🗓️ "; }
+        .date-item::before { content: "ðŸ—“ï¸ "; }
 
         .batch-price {
             font-size: 13px;
@@ -784,7 +784,7 @@ flex-shrink: 0;
             <div class="brand-name">As Multiverse</div>
         </div>
         <div class="countdown-timer" id="countdownTimer">
-            ⏱ <span id="countdownTime">--:--:--</span>
+            â± <span id="countdownTime">--:--:--</span>
         </div>
     </div>
 
@@ -797,7 +797,7 @@ flex-shrink: 0;
                 id="searchInput"
                 autocomplete="off"
             >
-            <button class="search-btn" id="searchBtn">🔍</button>
+            <button class="search-btn" id="searchBtn">ðŸ”</button>
             <div class="autocomplete-dropdown" id="autocomplete"></div>
         </div>
     </div>
@@ -824,8 +824,8 @@ flex-shrink: 0;
 
     <div class="telegram-popup" id="telegramPopup">
         <div class="popup-content">
-            <button class="popup-close" id="popupClose">✕</button>
-            <div class="popup-icon">📢</div>
+            <button class="popup-close" id="popupClose">âœ•</button>
+            <div class="popup-icon">ðŸ“¢</div>
             <div class="popup-title">Join As Multiverse!</div>
             <div class="popup-desc">Stay updated with latest study materials</div>
             <button class="telegram-btn" id="popupJoin">Join Telegram Channel</button>
@@ -848,7 +848,7 @@ flex-shrink: 0;
                     id="mahapackSearchInput"
                     autocomplete="off"
                 >
-                <span class="mahapack-search-icon">🔍</span>
+                <span class="mahapack-search-icon">ðŸ”</span>
             </div>
         </div>
         <div class="mahapack-scroll">
@@ -867,8 +867,8 @@ flex-shrink: 0;
             <button onclick="document.getElementById('resetKeyPopup').style.display='none'" style="
                 position:absolute; top:12px; right:12px; width:32px; height:32px;
                 background:rgba(51,65,85,0.6); border:none; border-radius:50%;
-                cursor:pointer; font-size:16px; color:#94a3b8;">✕</button>
-            <div style="font-size:40px; margin-bottom:15px;">🔑</div>
+                cursor:pointer; font-size:16px; color:#94a3b8;">âœ•</button>
+            <div style="font-size:40px; margin-bottom:15px;">ðŸ”‘</div>
             <div style="font-size:20px; font-weight:800; color:#e2e8f0; margin-bottom:10px;">Reset Session Key</div>
             <div style="font-size:14px; color:#94a3b8; margin-bottom:25px; line-height:1.5;">
                 Your current session will be deleted and you'll need to generate a new key to continue.
@@ -877,7 +877,7 @@ flex-shrink: 0;
                 background:linear-gradient(135deg,#ef4444,#dc2626);
                 border:none; border-radius:12px; padding:13px 35px;
                 font-size:15px; font-weight:700; color:white; cursor:pointer;">
-                🔄 Reset Key
+                ðŸ”„ Reset Key
             </button>
         </div>
     </div>
@@ -1069,12 +1069,12 @@ const re = new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
             if (feeTotal === null || feeTotal === undefined || feeTotal === "") return "";
             const fee = Number(feeTotal);
             if (fee === 0) {
-                return `<div class="batch-price">💵 <span class="batch-price-free">₹0</span></div>`;
+                return `<div class="batch-price">ðŸ’µ <span class="batch-price-free">â‚¹0</span></div>`;
             }
             return `<div class="batch-price">
-                        💵
-                        <span class="batch-price-original">₹${escapeHTML(String(fee))}</span>
-                        <span class="batch-price-free">₹0</span>
+                        ðŸ’µ
+                        <span class="batch-price-original">â‚¹${escapeHTML(String(fee))}</span>
+                        <span class="batch-price-free">â‚¹0</span>
                     </div>`;
         }
 
@@ -1092,11 +1092,11 @@ const re = new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
                     ${showFavBtn ? `
                         <button class="favorite-btn ${isFav ? "favorited" : ""}"
                                 data-batch-id="${escapeHTML(batch._id)}">
-                            ${isFav ? "❤️" : "🤍"}
+                            ${isFav ? "â¤ï¸" : "ðŸ¤"}
                         </button>
                     ` : ""}
 
-                    ${isMahapack ? `<div class="mahapack-badge">📦 MAHAPACK</div>` : ""}
+                    ${isMahapack ? `<div class="mahapack-badge">ðŸ“¦ MAHAPACK</div>` : ""}
 
                     <div class="batch-name">${escapeHTML(batch.name)}</div>
 
@@ -1212,7 +1212,7 @@ const re = new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
             if (!subBatches.length) {
                 el.mahapackGrid.innerHTML = `
                     <div class="mahapack-empty">
-                        <div class="icon">📦</div>
+                        <div class="icon">ðŸ“¦</div>
                         <div>No sub-batches found in this Mahapack.</div>
                     </div>
                 `;
@@ -1237,7 +1237,7 @@ const re = new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
                 if (!results.length && query) {
                     el.mahapackGrid.innerHTML = `
                         <div class="mahapack-no-results">
-                            🔍 No sub-batches found for "<strong>${escapeHTML(query)}</strong>"
+                            ðŸ” No sub-batches found for "<strong>${escapeHTML(query)}</strong>"
                         </div>
                     `;
                 } else {
@@ -1368,7 +1368,7 @@ function loadMoreBatches() {
 
             if (!state.favourites.length) {
                 el.favouriteBatches.style.display = "none";
-                showError("No Favourites", "Click the heart icon (🤍) on any batch to add it to favourites.");
+                showError("No Favourites", "Click the heart icon (ðŸ¤) on any batch to add it to favourites.");
                 return;
             }
 
@@ -1458,7 +1458,7 @@ hideError();
             if (!matched.length) {
                 el.totalBatches.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">🔍</div>
+                        <div class="empty-icon">ðŸ”</div>
                         <div class="empty-title">No Batches Found</div>
                         <div class="empty-desc">Try searching with different keywords</div>
                     </div>
@@ -1484,10 +1484,10 @@ hideError();
             document.querySelectorAll(`[data-batch-id="${batchId}"]`).forEach(btn => {
                 if (state.favourites.includes(batchId)) {
                     btn.classList.add("favorited");
-                    btn.textContent = "❤️";
+                    btn.textContent = "â¤ï¸";
                 } else {
                     btn.classList.remove("favorited");
-                    btn.textContent = "🤍";
+                    btn.textContent = "ðŸ¤";
                 }
             });
 

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Loading — As Multiverse</title>
+<title>Loading â€” As Multiverse</title>
 <link rel="icon" type="image/png" href="/static/site_logo.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -53,8 +53,8 @@ body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:
 </div>
 <div class="container">
     <div class="tab-bar" id="tab-bar" style="display:none">
-        <button class="tab-item active" data-tab="video" onclick="switchTab('video',this)">📹 Video</button>
-        <button class="tab-item" data-tab="notes" onclick="switchTab('notes',this)">📄 Notes</button>
+        <button class="tab-item active" data-tab="video" onclick="switchTab('video',this)">ðŸ“¹ Video</button>
+        <button class="tab-item" data-tab="notes" onclick="switchTab('notes',this)">ðŸ“„ Notes</button>
     </div>
     <div id="panel-video" class="panel active">
         <div class="video-wrap" id="video-wrap">
@@ -108,7 +108,7 @@ function switchTab(tab,btn){
 
 async function loadScheduleDetails(){
     try{
-        const data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents/${SCHEDULE_ID}`);
+        const data=await pw(`/pw-api/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents/${SCHEDULE_ID}`);
         if(!data.success||!data.data){
             showEmpty('video','Failed to load content');
             return;
@@ -116,7 +116,7 @@ async function loadScheduleDetails(){
         const item=data.data;
         const topic=item.topic||'';
         document.getElementById('back-label').textContent=topic||'Back';
-        document.title=(topic||'Content')+' — As Multiverse';
+        document.title=(topic||'Content')+' â€” As Multiverse';
 
         // Handle video
         const vd=item.videoDetails||{};
@@ -135,12 +135,12 @@ async function loadScheduleDetails(){
                 const vid=videoUrl.match(/(?:v=|\/embed\/|youtu\.be\/)([^&?\s]+)/);
                 if(vid) wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid[1]}?autoplay=1" allow="autoplay;fullscreen" allowfullscreen></iframe>`;
             } else if(videoUrl.includes('mpd')){
-                ph.innerHTML=`<div class="icon">🎬</div><div class="text">DRM protected stream. Open in PW app for best experience.</div>`;
+                ph.innerHTML=`<div class="icon">ðŸŽ¬</div><div class="text">DRM protected stream. Open in PW app for best experience.</div>`;
             } else {
                 wrap.innerHTML=`<video controls autoplay poster="${esc(thumb)}" src="${esc(videoUrl)}"></video>`;
             }
         } else {
-            document.getElementById('video-placeholder').innerHTML=`<div class="icon">📹</div><div class="text">Video not available or requires PW app.</div>`;
+            document.getElementById('video-placeholder').innerHTML=`<div class="icon">ðŸ“¹</div><div class="text">Video not available or requires PW app.</div>`;
         }
 
         // Show video info
@@ -148,9 +148,9 @@ async function loadScheduleDetails(){
         infoEl.style.display='block';
         document.getElementById('video-title').textContent=topic;
         const meta=[];
-        if(duration) meta.push(`<span>⏱ ${esc(duration)}</span>`);
-        if(date) meta.push(`<span>📅 ${esc(date)}</span>`);
-        if(item.subjectId?.name) meta.push(`<span>📚 ${esc(item.subjectId.name)}</span>`);
+        if(duration) meta.push(`<span>â± ${esc(duration)}</span>`);
+        if(date) meta.push(`<span>ðŸ“… ${esc(date)}</span>`);
+        if(item.subjectId?.name) meta.push(`<span>ðŸ“š ${esc(item.subjectId.name)}</span>`);
         document.getElementById('video-meta').innerHTML=meta.join('');
 
         // Handle notes/attachments
@@ -169,7 +169,7 @@ async function loadScheduleDetails(){
                 const card=document.createElement('div');
                 card.className='note-card';
                 card.innerHTML=`<a class="note-link" href="${esc(n.url)}" target="_blank" rel="noopener">
-                    <span class="note-icon">📄</span>
+                    <span class="note-icon">ðŸ“„</span>
                     <div><div class="note-name">${esc(n.name)}</div>${n.size?`<div class="note-size">${(n.size/1024).toFixed(0)} KB</div>`:''}</div>
                 </a>`;
                 notesList.appendChild(card);
@@ -190,7 +190,7 @@ async function loadScheduleDetails(){
 }
 
 function showEmpty(panel,msg){
-    document.getElementById('panel-'+panel).innerHTML=`<div class="empty"><div class="empty-icon">😔</div><div class="empty-text">${msg}</div></div>`;
+    document.getElementById('panel-'+panel).innerHTML=`<div class="empty"><div class="empty-icon">ðŸ˜”</div><div class="empty-text">${msg}</div></div>`;
 }
 
 loadScheduleDetails();
