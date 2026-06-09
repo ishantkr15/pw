@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -162,7 +162,7 @@ function buildVideoItem(item){
     const href=`/schedule-details?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(id_)}&tap=video`;
     const li=document.createElement('li');
     li.className='content-item';
-    li.innerHTML=`<a class="content-link" href="${esc(href)}">
+    li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', decodeURIComponent('${encodeURIComponent(JSON.stringify(item))}'))">
         <div class="thumb-box"><img data-src="${esc(thumb)||'/static/site_thumbnail.png'}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="" class="lazy-img" onerror="this.src='/static/site_thumbnail.png'"></div>
         <div class="content-details">
             <div class="content-name">${esc(name)}</div>
@@ -186,7 +186,7 @@ function buildNoteItems(item, isDpp){
             const href=`/schedule-details?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(item._id)}&tap=note&noteIndex=${gIdx}&isDpp=${isDpp?'true':'false'}`;
             const li=document.createElement('li');
             li.className='content-item';
-            li.innerHTML=`<a class="content-link" href="${esc(href)}">
+            li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', decodeURIComponent('${encodeURIComponent(JSON.stringify(item))}'))">
                 <div class="pdf-box">ðŸ“„</div>
                 <div class="content-details">
                     <div class="content-name">${esc(name)}</div>

@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/pw-api/:match*", "destination": "https://api.penpencil.co/:match*" },
+    { "source": "/pw-api/(.*)", "destination": "https://api.penpencil.co/$1" },
     { "source": "/", "destination": "/home.html" },
     { "source": "/batches", "destination": "/home.html" },
     { "source": "/subjects", "destination": "/subjects.html" },
